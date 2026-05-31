@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react';
 
-export default function Application() {
-  const [data, setData] = useState({
-    title: 'Simple Card',
-    description:
-      'This is a simple card component. Use it to display a title and a short description.',
-  });
+export default function Application(onItemClick) {
+  const [data, setData] = useState([
+    {
+      company: 'Simple Card',
+      job_title: 'Sample Job Title',
+      date: '2023-10-01',
+      status: 'applied',
+    },
+  ]);
 
   useEffect(() => {
     const stored = window.localStorage.getItem('applicationData');
@@ -15,20 +18,29 @@ export default function Application() {
 
     try {
       const parsed = JSON.parse(stored);
-      setData((current) => ({
-        title: parsed.title || current.title,
-        description: parsed.description || current.description,
-      }));
+      // Expecting applicationData to be an array of items
+      if (Array.isArray(parsed)) {
+        setData(parsed);
+      } else if (parsed && typeof parsed === 'object') {
+        // Single object stored — normalize to array
+        setData([parsed]);
+      }
     } catch (error) {
       console.warn('Failed to parse localStorage applicationData:', error);
     }
   }, []);
 
   return (
-    <div style={styles.card}>
-      <h2 style={styles.title}>{data.title}</h2>
-      <p style={styles.description}>{data.description}</p>
-    </div>
+    <>
+      {data.map((item, idx) => (
+        <article key={idx} onClick={() => onItemClick(item)}>
+          <div className="company-name">{item.company}</div>
+          <div className="job-title">{item.job_title}</div>
+          <div className="application-date">{item.date}</div>
+          <div className="application-status status-{item.status}">{item.status}</div>
+        </article>
+      ))}
+    </>
   );
 }
 

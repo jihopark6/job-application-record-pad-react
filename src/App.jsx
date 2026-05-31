@@ -1,11 +1,15 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
+import Application from './Application';
+import AppForm from './AppForm';
+import { Link } from './Link';
+import { useCurrentPath } from './useCurrentPath';
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [count, setCount] = useState(0);
+  const currentPath = useCurrentPath();
+  console.log('Current URL path:', currentPath); // Debugging log
+
 
   return (
     <>
@@ -13,21 +17,75 @@ function App() {
         <h1>Job Application History</h1>
         <nav>
             <ul>
-                <li><a href="#">Home</a></li>
-                <li><a href="#new">New</a></li>
-                <li><a href="#memo">Memo</a></li>
+                <li>
+                  <Link to="/">Home</Link>
+                </li>
+                <li>
+                  <Link to="#new">New</Link>
+                </li>
+                <li>
+                  <Link to="#memo">Memo</Link>
+                </li>
             </ul>
         </nav>
     </header>
+     <main>
+        <section id="home">
+            <div id="article-list">
+              <Application />
+            </div>
+        </section>
 
+        <section id="new">
+            {(currentPath === '#new') && (
+            <AppForm />
+            )}
 
+            <div id="application_memo_list">
+                
+            </div>
+        </section>
+
+        <section id="memo">
+            <div id="memo-list">
+                <article>
+                    <form action="" method="post" id="new_memo_form" />
+                        <div>
+                            <label for="job_application">Job Application:</label>
+                            <select id="job_application" name="job_application">
+
+                            </select>
+                        </div>
+                        <div>
+                            <label for="memo_content">Memo:</label>
+                            <textarea id="memo_content" name="memo_content" required></textarea>
+                        </div>
+
+                        <div>
+                            <button type="submit">Add Memo</button>
+                            <button type="button" id="cancel_memo_button">Cancel</button>
+                        </div>
+                </article>
+            </div>
+
+        </section>
+    </main>
+
+    <aside>
+        <input type="text" id="search_input" placeholder="Search by company or job title..." />
+    </aside>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 Job Application History. All rights reserved.</p>
+        </div>
+    </footer>
+      {/*
 
     
       <section id="center">
         <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
+        
         </div>
         <div>
           <h1>Get started</h1>
@@ -129,6 +187,7 @@ function App() {
 
       <div className="ticks"></div>
       <section id="spacer"></section>
+      */}
     </>
   )
 }
