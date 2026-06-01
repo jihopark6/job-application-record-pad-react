@@ -1,14 +1,24 @@
 import { useState } from 'react'
 import Application from './Application';
 import AppForm from './AppForm';
-import { Link } from './Link';
 import { useCurrentPath } from './useCurrentPath';
 import './App.css'
 
 function App() {
   const [count, setCount] = useState(0);
   const currentPath = useCurrentPath();
+  //const [currentPath, setCurrentPath] = useState(useCurrentPath());
+  
+  const navigatePage = (url) => {
+    
+    //setCurrentPath(url);
+  };
+
+  const handleClickItem = (item) => {
+    console.log('Clicked item:', item);
+  }
   console.log('Current URL path:', currentPath); // Debugging log
+  
 
 
   return (
@@ -18,34 +28,40 @@ function App() {
         <nav>
             <ul>
                 <li>
-                  <Link to="/">Home</Link>
+                  <a href="/">Home</a>
                 </li>
                 <li>
-                  <Link to="#new">New</Link>
+                  <a href="/new">New</a>
                 </li>
                 <li>
-                  <Link to="#memo">Memo</Link>
+                  <a href="/memo">Memo</a>
                 </li>
             </ul>
         </nav>
     </header>
      <main>
+        {(currentPath === '/') && (
         <section id="home">
             <div id="article-list">
               <Application />
             </div>
         </section>
-
+        )}
+        
+        {(currentPath === '/new' || currentPath === '/edit') && (
         <section id="new">
-            {(currentPath === '#new') && (
-            <AppForm />
-            )}
+            
+            <AppForm 
+            onCancel={() => { console.log("Cancel clicked"); location.href='/';}} />
+            
 
             <div id="application_memo_list">
                 
             </div>
         </section>
+        )}
 
+        {(currentPath === '/memo') && (
         <section id="memo">
             <div id="memo-list">
                 <article>
@@ -69,6 +85,7 @@ function App() {
             </div>
 
         </section>
+        )}
     </main>
 
     <aside>

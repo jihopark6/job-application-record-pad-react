@@ -1,14 +1,20 @@
-import {useState} from 'react';
+import {useState, useRef, useEffect} from 'react';
 
-export default function AppForm({editMode, existingData}) {
+export default function AppForm({onCancel, editMode, existingData}) {
     const [company, setCompany] = useState(existingData?.company || '');
     const [job_title, setJobTitle] = useState(existingData?.job_title || '');
     const [date, setDate] = useState(existingData?.date || '');
     const [status, setStatus] = useState(existingData?.status || 'applied');
     const [job_posting, setJobPosting] = useState(existingData?.job_posting || '');
     const [contact_info, setContactInfo] = useState(existingData?.contact_info || '');
-    
 
+    const inputFocus = useRef(null);
+
+    useEffect(() => {
+        inputFocus.current.focus();
+    }, []);
+
+    
     const newDataMode = () => {
         setCompany('');
         setJobTitle('');
@@ -21,10 +27,10 @@ export default function AppForm({editMode, existingData}) {
     const handleSubmit = (e) => {
         e.preventDefault();
         const newData = { company, job_title, date, status, job_posting, contact_info };
-        /*const existing = window.localStorage.getItem('applicationData');
+        const existing = window.localStorage.getItem('applicationData');
         const existingData = existing ? JSON.parse(existing) : [];
         const updatedData = [...existingData, newData];
-        window.localStorage.setItem('applicationData', JSON.stringify(updatedData));*/
+        window.localStorage.setItem('applicationData', JSON.stringify(updatedData));
         setCompany('');
         setJobTitle('');
         setDate('');
@@ -35,7 +41,7 @@ export default function AppForm({editMode, existingData}) {
     return (<form onSubmit={handleSubmit}>
                 <div>
                 <label htmlFor="application_date">Date:</label>
-                <input type="date" id="application_date" value={date} onChange={(e) => setDate(e.target.value)} required />
+                <input type="date" ref={inputFocus} id="application_date" value={date} onChange={(e) => setDate(e.target.value)} required />
                 </div>
                 
                 <div>
@@ -70,7 +76,9 @@ export default function AppForm({editMode, existingData}) {
 
                 <div>
                     <button type="submit">Add</button>
-                    <button type="button" id="cancel_button">Cancel</button>
+                    <button type="button"  id="cancel_button" onClick={onCancel}>
+                        Cancel
+                    </button>
                 </div>
             </form>);
 };
