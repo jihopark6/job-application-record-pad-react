@@ -1,14 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
-export default function Application(onItemClick) {
-  const [data, setData] = useState([
-    {
-      company: 'Simple Card',
-      job_title: 'Sample Job Title',
-      date: '2023-10-01',
-      status: 'applied',
-    },
-  ]);
+export default function Application({ onItemClick, searchQuery }) {
+  const [data, setData] = useState([]);
 
   useEffect(() => {
     const stored = window.localStorage.getItem('applicationData');
@@ -30,10 +23,18 @@ export default function Application(onItemClick) {
     }
   }, []);
 
+  const filteredData = data.filter((item) => {
+    const lowerSearchQuery = searchQuery.toLowerCase();
+    return (
+      item.company.toLowerCase().includes(lowerSearchQuery) ||
+      item.job_title.toLowerCase().includes(lowerSearchQuery)
+    );
+  });
+
   return (
     <>
-      {data.map((item, idx) => (
-        <article key={idx} onClick={() => onItemClick(item)}>
+      {filteredData.map((item, idx) => (
+        <article key={idx} onClick={() => onItemClick?.(item)}>
           <div className="company-name">{item.company}</div>
           <div className="job-title">{item.job_title}</div>
           <div className="application-date">{item.date}</div>
